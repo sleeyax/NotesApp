@@ -11,14 +11,14 @@ public class Note {
     private String id;
     private long userId;
     private String note;
-    private Date createdAt;
+    private Date updatedAt;
 
     public Note() {}
 
     public Note(long userId, String note) {
         this.userId = userId;
         this.note = note;
-        this.createdAt = new Date();
+        this.updatedAt = new Date();
     }
 
     @Override
@@ -50,11 +50,11 @@ public class Note {
         this.note = note;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

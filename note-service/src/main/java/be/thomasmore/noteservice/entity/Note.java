@@ -2,6 +2,8 @@ package be.thomasmore.noteservice.entity;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.Date;
+
 public class Note {
     @Id
     // NOTE: mongodb uses an ObjectId, which is a hexadecimal string
@@ -9,12 +11,14 @@ public class Note {
     private String id;
     private long userId;
     private String note;
+    private Date createdAt;
 
     public Note() {}
 
     public Note(long userId, String note) {
         this.userId = userId;
         this.note = note;
+        this.createdAt = new Date();
     }
 
     @Override
@@ -44,5 +48,13 @@ public class Note {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

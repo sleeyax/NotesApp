@@ -6,7 +6,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -23,13 +23,14 @@ public class NoteController {
     @PostMapping(value = "/")
     public Note postNote(@RequestBody Note note) {
         note.setId(ObjectId.get().toString());
+        note.setCreatedAt(new Date());
         repository.save(note);
         return note;
     }
 
-    @GetMapping(value = "/userid={userid}")
-    public List<Note> getNotesByUserId(@PathVariable("userid") int userId) {
-        return repository.findAllByUserId(userId);
+    @GetMapping(value = "/search/userid={userid}")
+    public List<Note> getNotesByUserId(@PathVariable("userid") int userid) {
+        return repository.findAllByUserId(userid);
     }
 
     @GetMapping(value = "/{id}")

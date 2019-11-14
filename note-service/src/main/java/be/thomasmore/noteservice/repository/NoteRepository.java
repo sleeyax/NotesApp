@@ -9,5 +9,5 @@ import java.util.List;
 
 @RepositoryRestResource(collectionResourceRel = "notes", path = "notes")
 public interface NoteRepository extends MongoRepository<Note, String> {
-    List<Note> findAllByUserId(@Param("userid") long userId);
+    List<Note> findAllByUserId(@Param("userid") long userid);
 }

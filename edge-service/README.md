@@ -1,11 +1,31 @@
 # edge service
 
 ## API
-count all notes in the notes database
+**Base-URL**: `/listings/`
+# Show Current User
+Get the details of the currently Authenticated User.
 
-method: `GET`
+**URL** : `/users/search/userid={userid}`
 
-endpoint: `/listings/notes/count`
+**Method** : `GET`
 
+**Auth required** : YES
+
+## Success Response
+
+**Code** : `200 OK`
+
+**Content examples**
+
+For a User with ID 13 on the local database
+```json
+{
+    "id": 15,
+    "firstName": "jos",
+    "lastName": "peeters",
+    "email": "jospeeters@example.com",
+    "password": "1234"
+}
+```
 ---
 

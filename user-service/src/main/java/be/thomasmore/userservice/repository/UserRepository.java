@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public interface UserRepository extends JpaRepository<User, Integer> {
     User findUserByEmail(@Param("email") String email);
     User findUserById(@Param("id") int id);
-    Long deleteById(int id);
+    void deleteById(@Param("id") int id);
 }

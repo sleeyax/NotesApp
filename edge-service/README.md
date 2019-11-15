@@ -2,8 +2,8 @@
 
 ## API
 **Base-URL**: `/listings/`
-# Show Current User
-Get the details of the currently Authenticated User.
+# Search For User By Id
+Get the details of the user with given userid
 
 **URL** : `/users/search/userid={userid}`
 
@@ -17,7 +17,7 @@ Get the details of the currently Authenticated User.
 
 **Content examples**
 
-For a User with ID 13 on the local database
+For a User with ID 15 on the local database
 ```json
 {
     "id": 15,
@@ -27,5 +27,18 @@ For a User with ID 13 on the local database
     "password": "1234"
 }
 ```
+# Add User
+Adds a new user to the database.
+
+**URL** : `/users/users/add/firstname={firstname}&lastname={lastname}&email={email}&password={password}`
+
+**Method** : `GET`
+
+**Auth required** : YES
+
+## Success Response
+
+**Code** : `200 OK`
+
 ---
 

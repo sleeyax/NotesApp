@@ -1,10 +1,8 @@
 package be.thomasmore.userservice.config;
 
-import be.thomasmore.userservice.WhitelistedEndpoints;
 import be.thomasmore.userservice.security.JwtUsernameAndPasswordAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,8 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import javax.servlet.http.HttpServletResponse;
 
 @EnableWebSecurity    // Enable security config. This annotation denotes config for spring security.
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -31,21 +27,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // make sure we use stateless session; session won't be used to store user's state.
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                // handle an authorized attempts
-                .exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
-                .and()
-                // Add a filter to validate user credentials and add token in the response header
-
                 // What's the authenticationManager()?
                 // An object provided by WebSecurityConfigurerAdapter, used to authenticate the user passing user's credentials
                 // The filter needs this auth manager to authenticate the user.
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig))
                 .authorizeRequests()
-                // allow requests w/o authentication for some endpoints
-                .antMatchers(WhitelistedEndpoints.ADD_USER).permitAll()
-                .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
-                // any other requests must be authenticated
-                .anyRequest().authenticated();
+                // We allow all requests here because the user-service shouldn't be bothered with validating tokens.
+                // Authorization and validation is a job for the Zuul gateway, which is the only service that's accessible to the public.
+                .anyRequest().permitAll();//.authenticated();
     }
 
     // Spring has UserDetailsService interface, which can be overriden to provide our implementation for fetching user from database (or any other source).

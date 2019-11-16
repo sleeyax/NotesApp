@@ -1,4 +1,4 @@
-package be.thomasmore.userservice;
+package be.thomasmore.userservice.security;
 
 /**
  * List of URL endpoints that don't require authentication/authorization (JWT) in order to be accessed.

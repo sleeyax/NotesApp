@@ -3,7 +3,7 @@ package be.thomasmore.zuulgateway.config;
 import org.springframework.beans.factory.annotation.Value;
 
 public class JwtConfig {
-    @Value("${security.jwt.uri:/auth/**}")
+    @Value("${security.jwt.uri:/auth/login}")
     private String Uri;
 
     @Value("${security.jwt.header:Authorization}")
@@ -15,11 +15,11 @@ public class JwtConfig {
     @Value("${security.jwt.expiration:#{24*60*60}}")
     private int expiration;
 
-    @Value("${security.jwt.secret:JwtSecretKey}")
+    @Value("${security.jwt.secret:nwl0Tp6QLGHBr5q}")
     private String secret;
 
     public String getUri() {
-        return Uri; //  /auth/**
+        return Uri;
     }
 
     public String getHeader() {

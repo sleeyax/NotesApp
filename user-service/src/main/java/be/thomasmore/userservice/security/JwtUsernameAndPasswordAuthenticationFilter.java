@@ -53,7 +53,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
             // 3. Authentication manager authenticate the user, and use UserDetialsServiceProvider::loadUserByUsername() method to load the user.
             return authManager.authenticate(authToken);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

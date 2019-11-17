@@ -1,14 +1,14 @@
 # Zuul gateway
 Proxy server that handles user authentication. 
 
-All incoming requests will be validated and/or filtered before being forwared to internal microservices.
+All incoming requests will be validated and/or filtered using the [user service](../user-service) before being forwared to the [edge service](../edge-service).
 Almost all requests require an authorization header in the following format:
 
 `Authorization: Bearer <jwt>`
 
 This is the only service that's accessible to the public.
 
-## Unauthorized requests
+## Whitelisted requests
 Below is a list of requests that don't require authorization.
 ### User login
 `/auth/login` -> `user-service/login`

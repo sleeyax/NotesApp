@@ -1,6 +1,10 @@
 # edge service
-
+Service that forwards requests to the appropriate internal microservices.
+This service should only be called through the [Zuul gateway](../zuul-gateway).
+ 
 ## API
+SwaggerUI should be available at: `http://localhost:8070/swagger-ui.html`
+
 **Base-URL**: `/listings/`
 # Search For User By Id
 Get the details of the user with given userid

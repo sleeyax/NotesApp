@@ -2,11 +2,14 @@ package be.thomasmore.edgeservice.controllers;
 
 import be.thomasmore.edgeservice.ServiceEndpoints;
 import be.thomasmore.edgeservice.models.Note;
+import be.thomasmore.edgeservice.models.SpellCheckRequest;
 import be.thomasmore.edgeservice.models.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -62,5 +65,15 @@ public class ListingController {
         List<User> users = objectMapper.convertValue(restTemplate.getForObject(ServiceEndpoints.USERS + "/all", User[].class), new TypeReference<List<User>>() {});
         // TODO: return all users
         return  users;
+    }
+
+    /**
+     * Check spelling of specified text
+     * @param spellCheckRequest JSON Object containing the text to check
+     * @return json response
+     */
+    @PostMapping("spelling/check")
+    public ResponseEntity<String> checkSpelling(@RequestBody SpellCheckRequest spellCheckRequest) {
+        return restTemplate.postForEntity(ServiceEndpoints.SPELLING + "/check", spellCheckRequest, String.class);
     }
 }

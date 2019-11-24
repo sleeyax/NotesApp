@@ -1,35 +1,36 @@
 package be.thomasmore.converterservice.controllers;
 
+import be.thomasmore.converterservice.entity.ConversionRequest;
+import be.thomasmore.converterservice.entity.ConversionResponse;
 import org.apache.commons.lang.WordUtils;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 
 @RestController
 @RequestMapping(path = "/convert")
 public class ConverterController {
-    // TODO: use POST request instead
-    // TODO: respond with json
-
-    // http://localhost:9002/convert/to/upper?text=aa
-    @GetMapping(value = "/to/upper")
-    public String toUpperCase(@RequestParam String text) {
-        return text.toUpperCase();
+    @PostMapping(value = "/to/upper")
+    public ConversionResponse toUpperCase(@RequestBody ConversionRequest request) {
+        return new ConversionResponse(request.getText(), request.getText().toUpperCase());
     }
 
-    @GetMapping(value = "/to/lower")
-    public String toLowerCase(@RequestParam String text) {
-        return text.toLowerCase();
+    @PostMapping(value = "/to/lower")
+    public ConversionResponse toLowerCase(@RequestBody ConversionRequest request) {
+        return new ConversionResponse(request.getText(), request.getText().toLowerCase());
     }
 
-    @GetMapping(value = "/to/capitalized")
-    public String toCapitalized(@RequestParam String text) {
-        return WordUtils.capitalize(text);
+    @PostMapping(value = "/to/capitalized")
+    public ConversionResponse toCapitalized(@RequestBody ConversionRequest request) {
+        return new ConversionResponse(request.getText(), WordUtils.capitalize(request.getText()));
     }
 
-    @GetMapping(value = "/to/leet")
-    public String toLeetSpeak(@RequestParam String text) {
+    @PostMapping(value = "/to/leet")
+    public ConversionResponse toLeetSpeak(@RequestBody ConversionRequest request) {
+        String text = request.getText();
         HashMap<String, String> leet = new HashMap<>();
         leet.put("a", "4");
         leet.put("b", "6");
@@ -63,7 +64,7 @@ public class ConverterController {
             text = text.replace(key, value).replace(key.toUpperCase(), value);
         }
 
-        return text;
+        return new ConversionResponse(request.getText(), text);
     }
 
 }

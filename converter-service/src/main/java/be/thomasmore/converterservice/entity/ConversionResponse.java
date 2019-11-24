@@ -4,7 +4,7 @@ public class ConversionResponse {
     private String originalText;
     private String convertedText;
 
-    ConversionResponse(String original, String converted) {
+    public ConversionResponse(String original, String converted) {
         this.originalText = original;
         this.convertedText = converted;
     }

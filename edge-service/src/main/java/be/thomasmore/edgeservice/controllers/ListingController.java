@@ -6,6 +6,8 @@ import be.thomasmore.edgeservice.models.SpellCheckRequest;
 import be.thomasmore.edgeservice.models.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,17 +28,63 @@ public class ListingController {
     private ObjectMapper objectMapper;
 
     @GetMapping("notes/count")
+    @ApiOperation(
+            value = "Count the amount of notes in the notes database",
+            response = Note.class,
+            responseContainer = "List"
+    )
     public int getNotesCount() {
         Note[] notes = restTemplate.getForObject(ServiceEndpoints.NOTES, Note[].class);
         return notes != null ? notes.length : 0;
     }
 
     @GetMapping("notes/search/userid={userid}")
+    @ApiOperation(
+            value = "Finds notes by user id",
+            response = Note.class,
+            responseContainer = "List"
+    )
     public List<Note> getNotesByUserId(@PathVariable("userid") int userId) {
         TypeReference<List<Note>> type = new TypeReference<List<Note>>() {};
-        List<Note> notes = objectMapper.convertValue(restTemplate.getForObject(ServiceEndpoints.NOTES + "search/userid=" + userId, Note[].class), new TypeReference<List<Note>>() {});
+        List<Note> notes = objectMapper.convertValue(restTemplate.getForObject(ServiceEndpoints.NOTES + "/search/userid=" + userId, Note[].class), new TypeReference<List<Note>>() {});
         // TODO: return all user notes
         return  notes;
+    }
+
+    @PostMapping("notes/create")
+    @ApiOperation(
+            value = "Creates a new note",
+            response = Note.class
+    )
+    public ResponseEntity<Note> createNote(@RequestBody Note note) {
+        return restTemplate.postForEntity(ServiceEndpoints.NOTES, note,  Note.class);
+    }
+
+    @PutMapping("notes/update")
+    @ApiOperation(
+            value = "Update a note",
+            response = Note.class
+    )
+    public ResponseEntity<Note> updateNote(@RequestBody Note updatedNote) {
+        // TODO: validation
+        restTemplate.put(ServiceEndpoints.NOTES + "/" + updatedNote.getId(), Note.class);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("notes/delete/{noteid}/user/{userid}")
+    @ApiOperation(
+            value = "Deletes a note from specified user",
+            response = Note.class
+    )
+    public ResponseEntity<Note> deleteNote(@PathVariable String noteid, @PathVariable int userid) {
+        // get the note from the db by its id.
+        // if it doesn't exist, or the user is not the creator of the note, return a bad request.
+        Note note = restTemplate.getForObject(ServiceEndpoints.NOTES + "/" + noteid, Note.class);
+        if (note == null || note.getUserId() != userid)
+            return ResponseEntity.badRequest().build();
+
+        restTemplate.delete(ServiceEndpoints.NOTES + "/" + noteid);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("users/count")
@@ -49,14 +97,6 @@ public class ListingController {
     public User getUserByUserId(@PathVariable("userid") int userId){
         User user = objectMapper.convertValue(restTemplate.getForObject(ServiceEndpoints.USERS + "/id?id=" + userId, User.class), User.class);
         return user;
-    }
-
-    @PostMapping("users/add/firstname={firstname}&lastname={lastname}&email={email}&password={password}")
-    public ResponseEntity<String> addUser(@PathVariable("firstname") String firstName, @PathVariable("lastname") String lastName,
-                                         @PathVariable("email") String email, @PathVariable("password") String password){
-        ResponseEntity<String> result = restTemplate.postForEntity(ServiceEndpoints.USERS + "/add?firstName=" + firstName + "&lastName=" + lastName
-        + "&email=" + email + "&password=" + password, User.class, String.class);
-        return result;
     }
 
     @GetMapping("users/getAll")

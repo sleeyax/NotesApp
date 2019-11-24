@@ -228,6 +228,46 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "check spelling",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"text\": \"hello werld\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8070/listings/spelling/check",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8070",
+							"path": [
+								"listings",
+								"spelling",
+								"check"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -468,7 +508,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"text\": \"hello world\"\n}",
+							"raw": "{\n\t\"text\": \"hello werld\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -485,6 +525,48 @@
 							"path": [
 								"spelling",
 								"check"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "converter-service",
+			"item": [
+				{
+					"name": "convert to 1337",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"text\": \"hello, how are you doing today?\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9002/convert/to/leet",
+							"host": [
+								"localhost"
+							],
+							"port": "9002",
+							"path": [
+								"convert",
+								"to",
+								"leet"
 							]
 						}
 					},

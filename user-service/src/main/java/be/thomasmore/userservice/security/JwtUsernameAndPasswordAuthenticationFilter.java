@@ -1,5 +1,6 @@
 package be.thomasmore.userservice.security;
 
+import be.thomasmore.userservice.ExpandedUserDetails;
 import be.thomasmore.userservice.config.JwtConfig;
 import be.thomasmore.userservice.enitity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,10 +60,12 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     }
 
     // Upon successful authentication, generate a token.
-    // The 'auth' passed to successfulAuthentication() is the current authenticated user.
+    // The 'auth' passed to successfulAuthentication() is the current authenticated user (type: ExpandedUserDetails).
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, org.springframework.security.core.Authentication auth) throws IOException, ServletException {
+        ExpandedUserDetails userDetails = (ExpandedUserDetails) auth.getPrincipal();
         Long now = System.currentTimeMillis();
+
         String token = Jwts.builder()
                 .setSubject(auth.getName())
                 // Convert to list of strings.
@@ -70,6 +73,8 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                 .claim("authorities", auth.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList()))
+                .claim("id", userDetails.getId())
+                .claim("firstName", userDetails.getFirstName())
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + jwtConfig.getExpiration() * 1000))  // in milliseconds
                 .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())

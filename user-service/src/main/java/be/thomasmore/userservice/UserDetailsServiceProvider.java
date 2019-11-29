@@ -29,6 +29,10 @@ public class UserDetailsServiceProvider implements UserDetailsService {
             throw new UsernameNotFoundException("User with email '" + username + "' not found!");
         // List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
         List<GrantedAuthority> authorities = Collections.emptyList();
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+       // return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+        ExpandedUserDetails userDetails = new ExpandedUserDetails(user.getEmail(), user.getPassword(), authorities);
+        userDetails.setId(user.getId());
+        userDetails.setFirstName(user.getFirstName());
+        return userDetails;
     }
 }

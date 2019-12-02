@@ -7,15 +7,12 @@ import be.thomasmore.edgeservice.models.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -57,6 +54,7 @@ public class ListingController {
             response = Note.class
     )
     public ResponseEntity<Note> createNote(@RequestBody Note note) {
+        note.setUpdatedAt(new Date());
         return restTemplate.postForEntity(ServiceEndpoints.NOTES, note,  Note.class);
     }
 
@@ -67,7 +65,7 @@ public class ListingController {
     )
     public ResponseEntity<Note> updateNote(@RequestBody Note updatedNote) {
         // TODO: validation
-        restTemplate.put(ServiceEndpoints.NOTES + "/" + updatedNote.getId(), Note.class);
+        restTemplate.put(ServiceEndpoints.NOTES + "/" + updatedNote.getId(), updatedNote, Note.class);
         return ResponseEntity.ok().build();
     }
 

@@ -3,11 +3,14 @@ package be.thomasmore.edgeservice.models;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class Note {
     private String id;
     private long userId;
     private String note;
+    private Date updatedAt;
 
     public String getId() {
         return id;
@@ -31,5 +34,13 @@ public class Note {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

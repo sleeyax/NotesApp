@@ -19,9 +19,15 @@ public class UserController
     private BCryptPasswordEncoder encoder;
 
     @PostMapping(path = "/add")
-    ResponseEntity<User> addNewUser (@RequestBody User user) {
+    ResponseEntity addNewUser (@RequestBody User user) {
+        // check if user already exists
+        if (userRepository.findUserByEmail(user.getEmail()) != null)
+            return ResponseEntity.badRequest().body("Email already registered to another user!");
+
+        // save user in db
         user.setPassword(encoder.encode(user.getPassword()));
         userRepository.save(user);
+
         // hide pw from response
         user.setPassword(null);
         return ResponseEntity.ok(user);

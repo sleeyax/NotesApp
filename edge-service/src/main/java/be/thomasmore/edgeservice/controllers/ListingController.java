@@ -116,4 +116,24 @@ public class ListingController {
     public ResponseEntity<String> checkSpelling(@RequestBody SpellCheckRequest spellCheckRequest) {
         return restTemplate.postForEntity(ServiceEndpoints.SPELLING + "/check", spellCheckRequest, String.class);
     }
+
+    @PostMapping("convert/toupper")
+    public ResponseEntity<String> convertToUpper(@RequestBody String request) {
+        return restTemplate.postForEntity(ServiceEndpoints.CONVERT + "/to/upper", request, String.class);
+    }
+
+    @PostMapping("convert/tolower")
+    public ResponseEntity<String> convertToLower(@RequestBody String request) {
+        return restTemplate.postForEntity(ServiceEndpoints.CONVERT + "/to/lower", request, String.class);
+    }
+
+    @PostMapping("convert/tocapitalize")
+    public ResponseEntity<String> convertToCapitalize(@RequestBody String request) {
+        return restTemplate.postForEntity(ServiceEndpoints.CONVERT + "/to/capitalized", request, String.class);
+    }
+
+    @PostMapping("convert/toleet")
+    public ResponseEntity<String> convertToLeet(@RequestBody String request) {
+        return restTemplate.postForEntity(ServiceEndpoints.CONVERT + "/to/leet", request, String.class);
+    }
 }

@@ -19,7 +19,7 @@ public class NoteServiceApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		repository.deleteAll();
-		DbInitializer.createExampleNotes(repository);
+		/*repository.deleteAll();
+		DbInitializer.createExampleNotes(repository);*/
 	}
 }

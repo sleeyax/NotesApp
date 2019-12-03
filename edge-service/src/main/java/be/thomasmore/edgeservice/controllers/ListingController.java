@@ -1,6 +1,7 @@
 package be.thomasmore.edgeservice.controllers;
 
 import be.thomasmore.edgeservice.ServiceEndpoints;
+import be.thomasmore.edgeservice.models.ConversionRequest;
 import be.thomasmore.edgeservice.models.Note;
 import be.thomasmore.edgeservice.models.SpellCheckRequest;
 import be.thomasmore.edgeservice.models.User;
@@ -116,22 +117,22 @@ public class ListingController {
     }
 
     @PostMapping("convert/toupper")
-    public ResponseEntity<String> convertToUpper(@RequestBody String request) {
+    public ResponseEntity<String> convertToUpper(@RequestBody ConversionRequest request) {
         return restTemplate.postForEntity(ServiceEndpoints.CONVERT + "/to/upper", request, String.class);
     }
 
     @PostMapping("convert/tolower")
-    public ResponseEntity<String> convertToLower(@RequestBody String request) {
+    public ResponseEntity<String> convertToLower(@RequestBody ConversionRequest request) {
         return restTemplate.postForEntity(ServiceEndpoints.CONVERT + "/to/lower", request, String.class);
     }
 
     @PostMapping("convert/tocapitalize")
-    public ResponseEntity<String> convertToCapitalize(@RequestBody String request) {
+    public ResponseEntity<String> convertToCapitalize(@RequestBody ConversionRequest request) {
         return restTemplate.postForEntity(ServiceEndpoints.CONVERT + "/to/capitalized", request, String.class);
     }
 
     @PostMapping("convert/toleet")
-    public ResponseEntity<String> convertToLeet(@RequestBody String request) {
+    public ResponseEntity<String> convertToLeet(@RequestBody ConversionRequest request) {
         return restTemplate.postForEntity(ServiceEndpoints.CONVERT + "/to/leet", request, String.class);
     }
 }

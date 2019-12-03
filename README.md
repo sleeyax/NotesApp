@@ -8,7 +8,7 @@
 [![forthebadge](https://forthebadge.com/images/badges/powered-by-netflix.svg)](https://forthebadge.com)
 
 ## About
-This is a simple Java backend powered by microservices, used to store notes. 
+This is a simple Java backend powered by microservices. Users can register, log in, create notes, optionally check them for spelling errors or convert them to a different format.
 
 ## Overview
 ![topology](img/topology.png)

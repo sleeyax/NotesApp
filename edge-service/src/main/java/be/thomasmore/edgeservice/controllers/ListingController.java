@@ -1,13 +1,12 @@
 package be.thomasmore.edgeservice.controllers;
 
 import be.thomasmore.edgeservice.ServiceEndpoints;
-import be.thomasmore.edgeservice.models.ConversionRequest;
-import be.thomasmore.edgeservice.models.Note;
-import be.thomasmore.edgeservice.models.SpellCheckRequest;
-import be.thomasmore.edgeservice.models.User;
+import be.thomasmore.edgeservice.models.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,17 +24,6 @@ public class ListingController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @GetMapping("notes/count")
-    @ApiOperation(
-            value = "Count the amount of notes in the notes database",
-            response = Note.class,
-            responseContainer = "List"
-    )
-    public int getNotesCount() {
-        Note[] notes = restTemplate.getForObject(ServiceEndpoints.NOTES, Note[].class);
-        return notes != null ? notes.length : 0;
-    }
-
     @GetMapping("notes/search/userid={userid}")
     @ApiOperation(
             value = "Finds notes by user id",
@@ -45,7 +33,6 @@ public class ListingController {
     public List<Note> getNotesByUserId(@PathVariable("userid") int userId) {
         TypeReference<List<Note>> type = new TypeReference<List<Note>>() {};
         List<Note> notes = objectMapper.convertValue(restTemplate.getForObject(ServiceEndpoints.NOTES + "/search/userid=" + userId, Note[].class), new TypeReference<List<Note>>() {});
-        // TODO: return all user notes
         return  notes;
     }
 
@@ -55,7 +42,7 @@ public class ListingController {
             response = Note.class
     )
     public ResponseEntity<Note> createNote(@RequestBody Note note) {
-        note.setUpdatedAt(new Date());
+        // TODO: find ou why this returns 'note' instead of the newly created note
         return restTemplate.postForEntity(ServiceEndpoints.NOTES, note,  Note.class);
     }
 
@@ -72,9 +59,10 @@ public class ListingController {
 
     @DeleteMapping("notes/delete/{noteid}/user/{userid}")
     @ApiOperation(
-            value = "Deletes a note from specified user",
+            value = "Deletes a note by id from specified user",
             response = Note.class
     )
+    @ApiResponses(value = @ApiResponse(code = 400, message = "Note not found or invalid user") )
     public ResponseEntity<Note> deleteNote(@PathVariable String noteid, @PathVariable int userid) {
         // get the note from the db by its id.
         // if it doesn't exist, or the user is not the creator of the note, return a bad request.
@@ -86,52 +74,60 @@ public class ListingController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("users/count")
-    public int getUsersCount(){
-        User[] users = restTemplate.getForObject(ServiceEndpoints.USERS + "/all", User[].class);
-        return users != null ? users.length : 0;
-    }
-
     @GetMapping("users/search/userid={userid}")
-    public User getUserByUserId(@PathVariable("userid") int userId){
-        User user = objectMapper.convertValue(restTemplate.getForObject(ServiceEndpoints.USERS + "/id?id=" + userId, User.class), User.class);
-        return user;
+    @ApiOperation(
+            value = "Get user by id",
+            response = User.class
+    )
+    @ApiResponses(value = @ApiResponse(code = 404, message = "User not found") )
+    public ResponseEntity getUserByUserId(@PathVariable("userid") int userId) {
+        User user = restTemplate.getForObject(ServiceEndpoints.USERS + "/id?id=" + userId, User.class);
+        if (user == null) return ResponseEntity.notFound().build();
+        user.setPassword(null);
+        return ResponseEntity.ok(user);
     }
 
-    @GetMapping("users/getAll")
-    public List<User> getALlUsers(){
-        TypeReference<List<User>> type = new TypeReference<List<User>>() {};
-        List<User> users = objectMapper.convertValue(restTemplate.getForObject(ServiceEndpoints.USERS + "/all", User[].class), new TypeReference<List<User>>() {});
-        // TODO: return all users
-        return  users;
-    }
-
-    /**
-     * Check spelling of specified text
-     * @param spellCheckRequest JSON Object containing the text to check
-     * @return json response
-     */
     @PostMapping("spelling/check")
+    @ApiOperation(
+            value = "Check spelling of specified text",
+            response = String.class
+    )
     public ResponseEntity<String> checkSpelling(@RequestBody SpellCheckRequest spellCheckRequest) {
         return restTemplate.postForEntity(ServiceEndpoints.SPELLING + "/check", spellCheckRequest, String.class);
     }
 
     @PostMapping("convert/toupper")
+    @ApiOperation(
+            value = "Convert text to upper case",
+            response = ConversionResponse.class
+    )
     public ResponseEntity<String> convertToUpper(@RequestBody ConversionRequest request) {
         return restTemplate.postForEntity(ServiceEndpoints.CONVERT + "/to/upper", request, String.class);
     }
 
     @PostMapping("convert/tolower")
+    @ApiOperation(
+            value = "Convert text to lower case",
+            response = ConversionResponse.class
+    )
     public ResponseEntity<String> convertToLower(@RequestBody ConversionRequest request) {
         return restTemplate.postForEntity(ServiceEndpoints.CONVERT + "/to/lower", request, String.class);
     }
 
     @PostMapping("convert/tocapitalize")
+    @ApiOperation(
+            value = "Capitalize text",
+            response = ConversionResponse.class
+    )
     public ResponseEntity<String> convertToCapitalize(@RequestBody ConversionRequest request) {
         return restTemplate.postForEntity(ServiceEndpoints.CONVERT + "/to/capitalized", request, String.class);
     }
 
     @PostMapping("convert/toleet")
+    @ApiOperation(
+            value = "Convert text to leet speak",
+            response = ConversionResponse.class
+    )
     public ResponseEntity<String> convertToLeet(@RequestBody ConversionRequest request) {
         return restTemplate.postForEntity(ServiceEndpoints.CONVERT + "/to/leet", request, String.class);
     }

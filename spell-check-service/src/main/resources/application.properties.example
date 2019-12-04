@@ -1,5 +1,0 @@
-server.port=9001
-spring.application.name=spell-check-service
-
-# custom settings
-api.key=

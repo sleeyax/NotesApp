@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -85,6 +86,30 @@ public class ListingController {
         if (user == null) return ResponseEntity.notFound().build();
         user.setPassword(null);
         return ResponseEntity.ok(user);
+    }
+
+    @DeleteMapping("users/{userid}")
+    @ApiOperation(
+            value = "Delete user by id"
+    )
+    public ResponseEntity deleteUserByUserId(@PathVariable("userid") int userId) {
+        try {
+            restTemplate.delete(ServiceEndpoints.USERS + "/" + userId);
+        }catch (Exception ex) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("users/{userid}")
+    @ApiOperation(
+            value = "Update user by id",
+            response = User.class
+    )
+    @ApiResponses(value = @ApiResponse(code = 404, message = "User not found") )
+    public ResponseEntity updateUserByUserId(@PathVariable("userid") int userId, @RequestBody User updatedUser) {
+        restTemplate.put(ServiceEndpoints.USERS + "/" + userId, updatedUser, User.class);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("spelling/check")

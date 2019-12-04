@@ -48,4 +48,9 @@ public class UserController
         userRepository.deleteById(id);
     }
 
+    @PutMapping(path = "/putUser")
+    public void putUser(@RequestParam User user){
+        userRepository.putUser(user);
+    }
+
 }

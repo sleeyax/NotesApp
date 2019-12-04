@@ -43,14 +43,20 @@ public class UserController
         return userRepository.findUserById(id);
     }
 
-    @DeleteMapping(path = "/delUser")
+    @DeleteMapping(path = "/id")
     public void delUserById(@RequestParam int id){
         userRepository.deleteById(id);
     }
 
     @PutMapping(path = "/putUser")
-    public void putUser(@RequestParam User user){
+    ResponseEntity updateUser (@RequestBody User user) {
+        // save user in db
+        user.setPassword(encoder.encode(user.getPassword()));
         userRepository.putUser(user);
+
+        // hide pw from response
+        user.setPassword(null);
+        return ResponseEntity.ok(user);
     }
 
 }

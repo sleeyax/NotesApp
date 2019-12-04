@@ -92,6 +92,7 @@ public class ListingController {
     @ApiOperation(
             value = "Delete user by id"
     )
+    @ApiResponses(value = @ApiResponse(code = 404, message = "User not found") )
     public ResponseEntity deleteUserByUserId(@PathVariable("userid") int userId) {
         try {
             restTemplate.delete(ServiceEndpoints.USERS + "/" + userId);

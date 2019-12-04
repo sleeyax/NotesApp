@@ -43,20 +43,24 @@ public class UserController
         return userRepository.findUserById(id);
     }
 
-    @DeleteMapping(path = "/id")
-    public void delUserById(@RequestParam int id){
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity delUserById(@PathVariable int id){
         userRepository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping(path = "/putUser")
-    ResponseEntity updateUser (@RequestBody User user) {
-        // save user in db
-        user.setPassword(encoder.encode(user.getPassword()));
-        userRepository.putUser(user);
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<User> putUser(@PathVariable int id, @RequestBody User updatedUser){
+        User user = userRepository.findUserById(id);
 
-        // hide pw from response
-        user.setPassword(null);
-        return ResponseEntity.ok(user);
+        if (user == null) return ResponseEntity.notFound().build();
+
+        user.setEmail(updatedUser.getEmail());
+        user.setFirstName(updatedUser.getFirstName());
+        user.setLastName(updatedUser.getLastName());
+        user.setPassword(encoder.encode(updatedUser.getPassword()));
+
+        return ResponseEntity.ok(userRepository.save(user));
     }
 
 }

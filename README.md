@@ -12,6 +12,8 @@ This is a simple Java backend powered by microservices. Users can register, log 
 
 ## Overview
 ![topology](img/topology.png)
+![swagger](img/swagger1.png)
+
 
 ## Microservices
 Below is a list of all required services to run this project:

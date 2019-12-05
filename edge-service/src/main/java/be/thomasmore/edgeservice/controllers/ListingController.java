@@ -43,8 +43,7 @@ public class ListingController {
             response = Note.class
     )
     public ResponseEntity<Note> createNote(@RequestBody Note note) {
-        // TODO: find ou why this returns 'note' instead of the newly created note
-        return restTemplate.postForEntity(ServiceEndpoints.NOTES, note,  Note.class);
+        return restTemplate.postForEntity(ServiceEndpoints.NOTES + "/", note,  Note.class);
     }
 
     @PutMapping("notes/update")
